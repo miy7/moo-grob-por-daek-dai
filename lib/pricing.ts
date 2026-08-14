@@ -2,7 +2,7 @@
 // The client only ever sends "units" (จำนวนขีด) — the amount is ALWAYS
 // derived on the server from this module so the client can never set its own price.
 
-export const PRICE_PER_UNIT = Number(process.env.PRICE_PER_UNIT ?? 80)
+export const PRICE_PER_UNIT = Number(process.env.PRICE_PER_UNIT ?? 1)
 
 export const MAX_UNITS = 200
 
