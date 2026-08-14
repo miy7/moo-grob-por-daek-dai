@@ -29,22 +29,40 @@ type PromptPayIdentifier =
 
 /**
  * Resolve the shop's PromptPay identifier from env.
- * PROMPTPAY_TYPE can be "msisdn" (phone), "natId", or "eWalletId".
- * Defaults to msisdn when unspecified.
+ *
+ * PROMPTPAY_TYPE may explicitly force the type ("msisdn" | "natId" | "eWalletId").
+ * When it is not set, the type is auto-detected from the number of digits,
+ * which is what PromptPay/Thunder expect:
+ *   - 10 digits  -> msisdn     (Thai mobile number, e.g. 0812345678)
+ *   - 13 digits  -> natId      (national ID / tax ID)
+ *   - 15 digits  -> eWalletId  (e-Wallet ID)
  */
 function getIdentifier(): PromptPayIdentifier {
-  const id = process.env.PROMPTPAY_ID
-  if (!id) {
+  const raw = process.env.PROMPTPAY_ID
+  if (!raw) {
     throw new ThunderError("ยังไม่ได้ตั้งค่า PROMPTPAY_ID")
   }
 
-  const type = (process.env.PROMPTPAY_TYPE ?? "msisdn").trim()
-  switch (type) {
-    case "natId":
-      return { natId: id }
-    case "eWalletId":
+  // Thunder expects digits only — strip spaces and dashes first.
+  let id = raw.replace(/[\s-]/g, "")
+  // Normalize a +66 / 66 country-code prefix to a local 0-prefixed mobile
+  // number, but only when the result is a 10-digit number (so a 15-digit
+  // eWalletId that happens to start with 66 is left untouched).
+  const stripped = id.replace(/^\+?66/, "0")
+  if (stripped.length === 10) id = stripped
+
+  const explicit = process.env.PROMPTPAY_TYPE?.trim()
+  if (explicit === "natId") return { natId: id }
+  if (explicit === "eWalletId") return { eWalletId: id }
+  if (explicit === "msisdn") return { msisdn: id }
+
+  // Auto-detect from length.
+  switch (id.length) {
+    case 15:
       return { eWalletId: id }
-    case "msisdn":
+    case 13:
+      return { natId: id }
+    case 10:
     default:
       return { msisdn: id }
   }
