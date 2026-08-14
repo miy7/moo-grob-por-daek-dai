@@ -109,7 +109,7 @@ export function PosClient({ pricePerUnit }: PosClientProps) {
       <main className="mx-auto flex min-h-dvh max-w-md flex-col px-6 pb-8 pt-8">
         <header className="text-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">
-            หมูกรอบพ่อแดกได้
+            หมูกรอบพอแดกได้
           </h1>
           <p className="mt-1 text-base font-medium text-muted-foreground">
             ขีดละ {pricePerUnit} บาท
