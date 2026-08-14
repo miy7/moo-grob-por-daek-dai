@@ -11,7 +11,7 @@ export default function Page() {
         </div>
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground text-balance">
-            หมูกรอบพ่อแดกได้
+            หมูกรอบพอแดกได้
           </h1>
           <p className="mt-2 text-base text-muted-foreground text-pretty">
             ระบบขายหน้าร้านสำหรับพนักงาน คิดเงินตามจำนวนขีด ขีดละ {PRICE_PER_UNIT} บาท
