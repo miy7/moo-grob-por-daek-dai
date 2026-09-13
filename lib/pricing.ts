@@ -30,7 +30,10 @@ export function validateAndPrice(rawUnits: unknown): ValidatedUnits | InvalidUni
     return { ok: false, error: "units ต้องมากกว่า 0" }
   }
 
-  if (Math.round(rawUnits * 100) !== rawUnits * 100) {
+  // Use a tolerance because values such as 1.34 can be represented as
+  // 1.3400000000000001 by JavaScript's floating-point number format.
+  const roundedUnits = Math.round((rawUnits + Number.EPSILON) * 100) / 100
+  if (Math.abs(rawUnits - roundedUnits) > Number.EPSILON * 10) {
     return { ok: false, error: "units กรอกทศนิยมได้ไม่เกิน 2 ตำแหน่ง" }
   }
 
@@ -40,8 +43,10 @@ export function validateAndPrice(rawUnits: unknown): ValidatedUnits | InvalidUni
 
   return {
     ok: true,
-    units: rawUnits,
-    amount: rawUnits * PRICE_PER_UNIT,
+    units: roundedUnits,
+    // PromptPay amounts must be stable decimal values, not floating-point
+    // artifacts such as 402.40000000000003.
+    amount: Math.round(roundedUnits * PRICE_PER_UNIT * 100) / 100,
   }
 }
 
