@@ -12,7 +12,7 @@ const plexThai = IBM_Plex_Sans_Thai({
 export const metadata: Metadata = {
   title: 'หมูกรอบพอแดกได้',
   description: 'POS By DEVYIM',
-  generator: 'v0.app',
+  generator: 'devyim.app',
 
   icons: {
     icon: '/apple-icon.png',
