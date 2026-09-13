@@ -26,12 +26,12 @@ export function validateAndPrice(rawUnits: unknown): ValidatedUnits | InvalidUni
     return { ok: false, error: "units ต้องเป็นตัวเลข" }
   }
 
-  if (!Number.isInteger(rawUnits)) {
-    return { ok: false, error: "units ต้องเป็นจำนวนเต็ม" }
+  if (rawUnits <= 0) {
+    return { ok: false, error: "units ต้องมากกว่า 0" }
   }
 
-  if (rawUnits < 1) {
-    return { ok: false, error: "units ต้องมากกว่า 0" }
+  if (Math.round(rawUnits * 100) !== rawUnits * 100) {
+    return { ok: false, error: "units กรอกทศนิยมได้ไม่เกิน 2 ตำแหน่ง" }
   }
 
   if (rawUnits > MAX_UNITS) {

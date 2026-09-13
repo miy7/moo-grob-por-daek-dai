@@ -7,30 +7,20 @@ import { POSButton } from "./pos-button"
 import { QRDisplay, type QrData } from "./qr-display"
 import { UnitCounter } from "./unit-counter"
 
-const MIN_UNITS = 1
-const MAX_UNITS = 200
-
 type PosClientProps = {
   pricePerUnit: number
 }
 
 export function PosClient({ pricePerUnit }: PosClientProps) {
-  const [units, setUnits] = useState(1)
+  const [unitsInput, setUnitsInput] = useState("1")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [qr, setQr] = useState<QrData | null>(null)
   const [completing, setCompleting] = useState(false)
   const [done, setDone] = useState<{ units: number; amount: number } | null>(null)
 
-  const amount = units * pricePerUnit
-
-  function increment() {
-    setUnits((u) => Math.min(MAX_UNITS, u + 1))
-  }
-
-  function decrement() {
-    setUnits((u) => Math.max(MIN_UNITS, u - 1))
-  }
+  const units = Number(unitsInput)
+  const amount = Number.isFinite(units) ? units * pricePerUnit : 0
 
   async function createQr() {
     if (loading) return // prevent double submit while a request is in flight
@@ -70,7 +60,7 @@ export function PosClient({ pricePerUnit }: PosClientProps) {
       }
       setDone({ units: qr.units, amount: qr.amount })
       setQr(null)
-      setUnits(1)
+      setUnitsInput("1")
     } catch (err) {
       setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาด")
     } finally {
@@ -118,11 +108,8 @@ export function PosClient({ pricePerUnit }: PosClientProps) {
 
         <div className="mt-8 flex flex-1 flex-col justify-center gap-8">
           <UnitCounter
-            units={units}
-            min={MIN_UNITS}
-            max={MAX_UNITS}
-            onIncrement={increment}
-            onDecrement={decrement}
+            value={unitsInput}
+            onChange={setUnitsInput}
             disabled={loading}
           />
 
