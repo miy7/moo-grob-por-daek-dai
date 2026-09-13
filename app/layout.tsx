@@ -20,29 +20,28 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'หมูกรอบพอแดกได้',
-    description: 'POS By DEVYIM',
-    url: 'https://moo-grob.devyim.site',
-    siteName: 'หมูกรอบพอแดกได้',
-    images: [
-      {
-        url: 'https://moo-grob.devyim.site/apple-icon.png',
-        width: 1200,
-        height: 630,
-        alt: 'หมูกรอบพอแดกได้',
-      },
-    ],
-    locale: 'th_TH',
-    type: 'website',
-  },
+  title: 'หมูกรอบพอแดกได้',
+  description: 'POS By DEVYIM',
+  url: 'https://moo-grob.devyim.site',
+  siteName: 'หมูกรอบพอแดกได้',
+  images: [
+    {
+      url: 'https://moo-grob.devyim.site/og-image.png',
+      width: 1200,
+      height: 630,
+      alt: 'หมูกรอบพอแดกได้',
+    },
+  ],
+  locale: 'th_TH',
+  type: 'website',
+},
 
-  twitter: {
-    card: 'summary_large_image',
-    title: 'หมูกรอบพอแดกได้',
-    description: 'POS By DEVYIM',
-    images: ['https://moo-grob.devyim.site/apple-icon.png'],
-  },
-}
+twitter: {
+  card: 'summary_large_image',
+  title: 'หมูกรอบพอแดกได้',
+  description: 'POS By DEVYIM',
+  images: ['https://moo-grob.devyim.site/og-image.png'],
+},
 
 export const viewport: Viewport = {
   colorScheme: 'light',
