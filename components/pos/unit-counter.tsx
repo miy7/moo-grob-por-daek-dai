@@ -36,7 +36,7 @@ export function UnitCounter({ value, onChange, disabled }: UnitCounterProps) {
       <input
         id="units"
         name="units"
-        type="number"
+        type="text"
         inputMode="decimal"
         min="0.01"
         max="200"
