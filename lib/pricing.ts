@@ -26,22 +26,26 @@ export function validateAndPrice(rawUnits: unknown): ValidatedUnits | InvalidUni
     return { ok: false, error: "units ต้องเป็นตัวเลข" }
   }
 
-  if (!Number.isInteger(rawUnits)) {
-    return { ok: false, error: "units ต้องเป็นจำนวนเต็ม" }
+  // Weight can be entered to two decimal places, e.g. 1.03 or 2.50.
+  const roundedUnits = Math.round(rawUnits * 100) / 100
+  if (Math.abs(rawUnits - roundedUnits) > Number.EPSILON) {
+    return { ok: false, error: "จำนวนขีดใส่ทศนิยมได้ไม่เกิน 2 ตำแหน่ง" }
   }
 
-  if (rawUnits < 1) {
-    return { ok: false, error: "units ต้องมากกว่า 0" }
+  if (roundedUnits <= 0) {
+    return { ok: false, error: "จำนวนขีดต้องมากกว่า 0" }
   }
 
-  if (rawUnits > MAX_UNITS) {
-    return { ok: false, error: `units ต้องไม่เกิน ${MAX_UNITS}` }
+  if (roundedUnits > MAX_UNITS) {
+    return { ok: false, error: `จำนวนขีดต้องไม่เกิน ${MAX_UNITS}` }
   }
 
   return {
     ok: true,
-    units: rawUnits,
-    amount: rawUnits * PRICE_PER_UNIT,
+    units: roundedUnits,
+    // Round to satang-equivalent precision so values like 1.03 × 80
+    // never display an IEEE-754 floating-point artifact.
+    amount: Math.round(roundedUnits * PRICE_PER_UNIT * 100) / 100,
   }
 }
 

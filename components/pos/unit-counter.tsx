@@ -9,6 +9,7 @@ type UnitCounterProps = {
   max?: number
   onIncrement: () => void
   onDecrement: () => void
+  onUnitsChange: (value: number) => void
   disabled?: boolean
 }
 
@@ -22,6 +23,7 @@ export function UnitCounter({
   max = 200,
   onIncrement,
   onDecrement,
+  onUnitsChange,
   disabled,
 }: UnitCounterProps) {
   const canDecrement = !disabled && units > min
@@ -38,13 +40,28 @@ export function UnitCounter({
       </StepButton>
 
       <div className="flex min-w-0 flex-1 flex-col items-center">
-        <span
-          className="text-8xl font-bold tabular-nums leading-none text-foreground"
+        <label htmlFor="unit-weight" className="sr-only">
+          จำนวนขีด
+        </label>
+        <input
+          id="unit-weight"
+          type="number"
+          inputMode="decimal"
+          min={0.01}
+          max={max}
+          step={0.01}
+          value={units}
+          onChange={(event) => {
+            const value = Number(event.target.value)
+            if (Number.isFinite(value) && value > 0 && value <= max) {
+              onUnitsChange(value)
+            }
+          }}
+          disabled={disabled}
           aria-live="polite"
-        >
-          {units}
-        </span>
-        <span className="mt-2 text-lg font-medium text-muted-foreground">ขีด</span>
+          className="w-56 max-w-full appearance-none bg-transparent text-center text-7xl font-bold tabular-nums leading-none text-foreground outline-none focus-visible:ring-4 focus-visible:ring-ring/40"
+        />
+        <span className="mt-2 text-lg font-medium text-muted-foreground">ขีด (กรอกทศนิยมได้)</span>
       </div>
 
       <StepButton

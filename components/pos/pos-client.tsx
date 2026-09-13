@@ -7,7 +7,7 @@ import { POSButton } from "./pos-button"
 import { QRDisplay, type QrData } from "./qr-display"
 import { UnitCounter } from "./unit-counter"
 
-const MIN_UNITS = 1
+const MIN_UNITS = 0.01
 const MAX_UNITS = 200
 
 type PosClientProps = {
@@ -29,7 +29,13 @@ export function PosClient({ pricePerUnit }: PosClientProps) {
   }
 
   function decrement() {
-    setUnits((u) => Math.max(MIN_UNITS, u - 1))
+    setUnits((u) => Math.max(MIN_UNITS, Math.round((u - 1) * 100) / 100))
+  }
+
+  function changeUnits(value: number) {
+    setUnits(Math.round(value * 100) / 100)
+    setQr(null)
+    setError(null)
   }
 
   async function createQr() {
@@ -123,6 +129,7 @@ export function PosClient({ pricePerUnit }: PosClientProps) {
             max={MAX_UNITS}
             onIncrement={increment}
             onDecrement={decrement}
+            onUnitsChange={changeUnits}
             disabled={loading}
           />
 
